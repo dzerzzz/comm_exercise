@@ -55,7 +55,7 @@ clients_loop_init() ->
 chatbot_loop_init() ->
     chatbot_loop([]).
 
-chatbot_loop(_) ->
+chatbot_loop(State) ->
     receive
         {message, Sender, Message} ->
             Sign = string:right(Message,1),
@@ -67,7 +67,8 @@ chatbot_loop(_) ->
                         "Whatever."
                 end,
             PidSender = whereis(Sender),
-            PidSender ! {message, bot, Response}
+            PidSender ! {message, bot, Response},
+            chatbot_loop(State)
     end.
 
 send(Sender, To, Message)->
